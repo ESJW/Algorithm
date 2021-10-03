@@ -1,34 +1,26 @@
 #include <stdio.h>
+#include <stdlib.h>
+#define MAX 100000
 
-void MergeSort(int list[], int p, int q) {
-	int data[sizeof(list)] = {0};
-	int k = 0;
+int list[MAX];	// 정렬할때 사용할 보조 배열
 
-	for (int i = 0; i < sizeof(list); i++)
-		data[i] = list[i]; // 37, 10, 22, 30, 35, 13, 25, 24
+void random_create(int data[])
+{
+	srand((unsigned)time(NULL)); // 난수 생성
 
-	if (p < q) {
-		k = (p + q) / 2;
-		MergeSort(data, p, k); // 37
-		MergeSort(data, k + 1, q); // 11
+	for (int i = 0; i < MAX; i++)
+	{
+		data[i] = (rand() * rand());
 	}
-	for (int i = 0; i <= k; i++) {
-		if (data[i] < data[k+1]) {
-			list[i] = data[i];
-			list[i + 1] = data[k+1];
-		}
-		else {
-			list[i] = data[k+1];
-			list[i + 1] = data[i];
-		}
-	}
-	int j;
-	int x = p;
-	int y = k + 1;
-	int z = p;
+}
+void Merge(int data[], int p, int k, int q) {
+	int j = 0;		// 보조 인덱스
+	int x = p;		// 왼쪽 데이터 인덱스
+	int y = k + 1;	// 오른쪽 데이터 인덱스
+	int z = p;		// list로 합병할 때 사용
 
 	while (x <= k && y <= q) {
-		if (data[z] <= data[y])
+		if (data[x] <= data[y])
 			list[z++] = data[x++];
 		else
 			list[z++] = data[y++];
@@ -37,17 +29,27 @@ void MergeSort(int list[], int p, int q) {
 		for (j = y; j <= q; j++)
 			list[z++] = data[j];
 	else
-		for (j = x; j <= q; j++)
+		for (j = x; j <= k; j++)
 			list[z++] = data[j];
 
-	for (j = p; j <= q; j++)
+	for (j = p; j <= q; j++) // 정렬된 데이터 복사
 		data[j] = list[j];
 }
 
+void MergeSort(int data[], int p, int q) {
+	int k = 0;	// 중앙 표시 값
 
+	if (p < q) {
+		k = (p + q) / 2;
+		MergeSort(data, p, k); // 37
+		MergeSort(data, k + 1, q); // 11
+		Merge(data, p, k, q);
+	}
+	
+}
 int main() {
-	int A[8] = { 37, 10, 22, 30, 35, 13, 25, 24 };
-	MergeSort(A, 0, sizeof(A)-1);
-	for (int i = 0; i < sizeof(A); i++)
-		printf("%d ", A[i]);
+	int data[MAX];
+	random_create(data);
+	MergeSort(data, 0, MAX);
+
 }
