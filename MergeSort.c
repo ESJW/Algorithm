@@ -2,22 +2,22 @@
 #include <stdlib.h>
 #define MAX 100000
 
-int list[MAX];	// 정렬할때 사용할 보조 배열
+long list[MAX];	// 정렬할때 사용할 보조 배열
 
-void random_create(int data[])
+void random_create(long data[])
 {
 	srand((unsigned)time(NULL)); // 난수 생성
 
 	for (int i = 0; i < MAX; i++)
 	{
-		data[i] = (rand() * rand());
+		data[i] = (rand() * rand() % MAX);
 	}
 }
-void Merge(int data[], int p, int k, int q) {
+void Merge(long data[], int p, int k, int q) {
 	int j = 0;		// 보조 인덱스
 	int x = p;		// 왼쪽 데이터 인덱스
 	int y = k + 1;	// 오른쪽 데이터 인덱스
-	int z = p;		// list로 합병할 때 사용
+	int z = p;		// 데이터 넣을 인덱스 표시
 
 	while (x <= k && y <= q) {
 		if (data[x] <= data[y])
@@ -36,7 +36,7 @@ void Merge(int data[], int p, int k, int q) {
 		data[j] = list[j];
 }
 
-void MergeSort(int data[], int p, int q) {
+void MergeSort(long data[], int p, int q) {
 	int k = 0;	// 중앙 표시 값
 
 	if (p < q) {
@@ -47,9 +47,18 @@ void MergeSort(int data[], int p, int q) {
 	}
 	
 }
+
 int main() {
-	int data[MAX];
+	int *data;
+	int count;
+
+	data = (long*)malloc(sizeof(long) * MAX);
+
 	random_create(data);
 	MergeSort(data, 0, MAX);
-
+	for (int i = 0; i < 5; i++) {
+		printf("몇번째 수를 출력할까요 >> ");
+		scanf("%d", &count);
+		printf("%d번째 수는 %d입니다\n", count, data[count]);
+	}
 }
